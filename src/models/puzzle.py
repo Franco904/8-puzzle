@@ -18,7 +18,7 @@ class Puzzle:
     def __init__(self):
         # self.__open_states = PuzzleState.random()
 
-        initial_state = PuzzleState([1, 2, 3, 4, 5, 6, 7, 9, 8])
+        initial_state = PuzzleState([1, 2, 3, 4, 5, 9, 6, 7, 8])
 
         self.__state_set = StateSet(initial_state)
         self.__visits_counter = 0
