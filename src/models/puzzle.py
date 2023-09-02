@@ -34,7 +34,7 @@ class Puzzle:
 
     def __search(self):
 
-        #todo start timer
+        start_time = time.time()
         # Enquanto houver estado aberto
         while(self.__state_set.open_size != 0):
             
@@ -48,11 +48,11 @@ class Puzzle:
             '''
 
             self.__increment_counter()
-
             # Verifica se o novo estado é o objetivo. Caso positivo, encerra a busca. Caso negativo, gera estados filhos.
             if(current_state == goal_state):
-                #todo end timer
-                return self.__end_search(True, current_state)
+                
+                end_time = time.time()
+                return self.__end_search(True, current_state, end_time - start_time)
             else:
                 child_states = current_state.generate_child_states()
 
@@ -63,11 +63,12 @@ class Puzzle:
             self.__state_set.add_visited_state(current_state)
            
 
-    def __end_search(self, hasFound: bool, final_state):
+    def __end_search(self, hasFound: bool, final_state, total_time):
         if hasFound:
             print(f'Estado final:')
             final_state.print_formatted()
             print('')
+            print(f'Tempo de busca: {total_time} seconds')
             print(f'Contagem de movimentos: {final_state.acc_cost}')
             print(f'nodos visitados: {self.__visits_counter}')
             print('Caminho para o resultado: ')
