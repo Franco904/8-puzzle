@@ -102,12 +102,13 @@ class PuzzleState():
 
     
     def calculateBasicHeuristic(self):
+        #* p.137 do livro
         '''
             O state objetivo é [1,2,3,4,5,6,7,8,9]. Como listas iniciam indexação em 0, tem-se que um elemento estará em sua posição desejada se seu valor - seu index for igual a 1
         
             Calcula-se a heurística básica contando quantos elementos estão fora de posição.
 
-            #? heurística ficará superestimada, considerando o custo unitário dos movimentos? Verificar e, se necessário, alterar para uma escala mais adequada (talvez dividir por 10?)
+            #? heurística ficará superestimada, considerando o custo unitário dos movimentos? Ler livro e, se necessário, alterar para uma escala mais adequada (talvez dividir por 10?)
         '''
         heuristic = 0
 
@@ -119,23 +120,25 @@ class PuzzleState():
 
 
     def calculateAdvancedHeuristic(self):
+        #* p.137 do livro
         
         '''
             Utiliza a mesma lógica da heurística anterior para identificar o estado desejado.
 
-            A heurística é calculada como a soma das distâncias atuais (em linha reta) de cada peça para a sua posição correta.
+            A heurística é calculada como a soma do número de movimentos necessários para mover cada peça para a sua posição correta (desconsiderando a existência de obstáculos).
         
-            #? Heurística superestimada? Verificar e, se necessário, buscar forma de colocar em escala adequada
+            #? Heurística superestimada? Ler livro e, se necessário, buscar forma de colocar em escala adequada
         '''
 
         heuristic = 0
         for i, piece_value in enumerate(self.__state):
             
-            current_coord = COORDS[i]
-            desired_coord = COORDS[piece_value-1]
+            if(piece_value != EMPTY_CELL):
+                current_coord = COORDS[i]
+                desired_coord = COORDS[piece_value-1]
 
-            distance = math.sqrt((current_coord[0]-desired_coord[0])**2 - (current_coord[1] - desired_coord[1])**2)
-            heuristic += distance
+                distance = abs(current_coord[0]-desired_coord[0]) + abs(current_coord[1] - desired_coord[1])
+                heuristic += distance
 
         self.__heuristic = heuristic
 

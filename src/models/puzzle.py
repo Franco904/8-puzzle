@@ -4,6 +4,15 @@ from src.models.state_set import StateSet
 
 goal_state = PuzzleState([1, 2, 3, 4, 5, 6, 7, 8, 9])
 
+'''
+#* Casos de teste
+#* Difícil: [9,6,5,2,4,7,8,1,3] - 16
+#* Difícil: [6,4,5, 2, 8, 9, 7, 3, 1] - 17
+#* Médio: [2,3,9, 1, 5, 8, 7, 6, 4] - 10
+#* Médio: [2, 6, 1, 9, 3, 5, 7, 4, 8] - 11
+#* Fácil: [1, 2, 3, 7, 5, 6, 4, 8, 9] - 2
+
+'''
 
 class Puzzle:
     """
@@ -18,7 +27,7 @@ class Puzzle:
     def __init__(self):
         # self.__open_states = PuzzleState.random()
 
-        initial_state = PuzzleState([1, 2, 3, 4, 5, 6, 7, 8, 9])
+        initial_state = PuzzleState([1, 2, 3, 7, 5, 6, 4, 8, 9])
         self.__state_set = StateSet(initial_state)
         self.__visits_counter = 0
 
