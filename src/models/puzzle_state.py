@@ -8,7 +8,7 @@ ROW_SIZE = 3
 
 #Cria e popula um dicionário que associa o index de um elemento em lista com sua coordenada em representação de matriz
 COORDS = {}
-for i in range(9):
+for i in range(BOARD_SIZE):
     COORDS[i] = (i%ROW_SIZE, i//ROW_SIZE)
 
 class PuzzleState():
@@ -134,7 +134,7 @@ class PuzzleState():
             current_coord = COORDS[i]
             desired_coord = COORDS[piece_value-1]
 
-            distance = math.sqrt((current_coord[0]-desired_coord[0])^2 - (current_coord[1] - desired_coord[1])^2)
+            distance = math.sqrt((current_coord[0]-desired_coord[0])**2 - (current_coord[1] - desired_coord[1])**2)
             heuristic += distance
 
         self.__heuristic = heuristic

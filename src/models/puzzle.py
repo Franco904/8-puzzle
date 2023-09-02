@@ -35,8 +35,10 @@ class Puzzle:
     def __search(self):
 
         #todo start timer
+        # Enquanto houver estado aberto
         while(self.__state_set.open_size != 0):
             
+            # Obtém o próximo estado
             current_state = self.__state_set.get_next_state()
 
             '''
@@ -47,6 +49,7 @@ class Puzzle:
 
             self.__increment_counter()
 
+            # Verifica se o novo estado é o objetivo. Caso positivo, encerra a busca. Caso negativo, gera estados filhos.
             if(current_state == goal_state):
                 #todo end timer
                 return self.__end_search(True, current_state)
@@ -55,7 +58,8 @@ class Puzzle:
 
                 for child_state in child_states:
                     self.__state_set.add_open_state(child_state)
-                    
+
+            # Adiciona estado analisado à lista de visitados.        
             self.__state_set.add_visited_state(current_state)
            
 
