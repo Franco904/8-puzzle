@@ -2,20 +2,20 @@ import random
 import time
 import math
 
-
-EMPTY = 9
+EMPTY_CELL = 9
 BOARD_SIZE = 9
 ROW_SIZE = 3
 
+#Cria e popula um dicionário que associa o index de um elemento em lista com sua coordenada em representação de matriz
 COORDS = {}
 for i in range(9):
     COORDS[i] = (i%ROW_SIZE, i//ROW_SIZE)
 
 class PuzzleState():
-    def __init__(self, pieces, cost=0, previous_state=None):
+    def __init__(self, state, cost=0, parent_state=None):
         
-        self.__state = pieces
-        self.__previous_state = previous_state
+        self.__state = state
+        self.__parent_state = parent_state
         self.__acc_cost = cost
         self.__heuristic = 0
 
@@ -53,41 +53,41 @@ class PuzzleState():
         return self.__heuristic
 
     @property
-    def previous_state(self):
-        return self.__previous_state
+    def parent_state(self):
+        return self.__parent_state
     
-    def generateNextStates(self):
+    def generate_child_states(self):
         # Gera e retorna uma lista de estados possíveis resultantes de movimentos válidos do estado atual.
 
-        empty_index = self.__state.index(EMPTY)
-        next_states = []
+        empty_index = self.__state.index(EMPTY_CELL)
+        child_states = []
 
-        movements = [{"index": empty_index-3, "direction": False},
-                     {"index": empty_index+3, "direction": False},
-                     {"index": empty_index-1, "direction": True},
-                     {"index": empty_index+1, "direction": True},
+        movements = [{"index": empty_index-3, "direction": False}, #up
+                     {"index": empty_index+3, "direction": False}, #down
+                     {"index": empty_index-1, "direction": True}, #left
+                     {"index": empty_index+1, "direction": True}, #right
                      ]
 
         for movement in movements:
             try:
-                next_states.append(self.__move_piece(
+                child_states.append(self.__create_child(
                     empty_index, movement["index"], movement["direction"]))
             except IndexError:
                 pass
 
-        return next_states
+        return child_states
 
-    def __switch_elements(self, empty_index, new_index):
+    def __move_pieces(self, empty_index, new_index):
         # Troca a posição do elemento vazio e de outro elemento.
         new_state = self.state[:]
 
         temp = new_state[new_index]
-        new_state[new_index] = EMPTY
+        new_state[new_index] = EMPTY_CELL
         new_state[empty_index] = temp
 
         return new_state
 
-    def __move_piece(self, empty_index, new_index, horizontal_move=False):
+    def __create_child(self, empty_index, new_index, horizontal_move=False):
         # Move uma peça para a posição vazia e gera um novo estado.
         if (new_index < 0 or new_index > BOARD_SIZE):
             raise IndexError("Invalid Movement")
@@ -95,7 +95,7 @@ class PuzzleState():
         if (horizontal_move is True and (new_index // ROW_SIZE != empty_index // ROW_SIZE)):
             raise IndexError("Invalid Movement")
 
-        new_state = self.__switch_elements(empty_index, new_index)
+        new_state = self.__move_pieces(empty_index, new_index)
         new_cost = self.__acc_cost+1
 
         return PuzzleState(new_state, new_cost, self)
@@ -107,7 +107,7 @@ class PuzzleState():
         
             Calcula-se a heurística básica contando quantos elementos estão fora de posição.
 
-            #!heurística ficará superestimada, considerando o custo unitário dos movimentos? Verificar e, se necessário, alterar para uma escala mais adequada (talvez dividir por 10?)
+            #? heurística ficará superestimada, considerando o custo unitário dos movimentos? Verificar e, se necessário, alterar para uma escala mais adequada (talvez dividir por 10?)
         '''
         heuristic = 0
 
@@ -125,7 +125,7 @@ class PuzzleState():
 
             A heurística é calculada como a soma das distâncias atuais (em linha reta) de cada peça para a sua posição correta.
         
-            #!Heurística superestimada? Verificar e, se necessário, buscar forma de colocar em escala adequada
+            #? Heurística superestimada? Verificar e, se necessário, buscar forma de colocar em escala adequada
         '''
 
         heuristic = 0
@@ -152,11 +152,11 @@ class PuzzleState():
     def display_path(self):
         # Exibe o caminho do estado inicial até o estado atual.
         path = [self]
-        previous = self.__previous_state
+        parent = self.__parent_state
 
-        while(previous is not None):
-            path.append(previous)
-            previous = previous.previous_state
+        while(parent is not None):
+            path.append(parent)
+            parent = parent.parent_state
         
         path.reverse()
         for i, state in enumerate(path):

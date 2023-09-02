@@ -12,24 +12,38 @@ class StateSet():
 
     def add_open_state(self, new_state):
         # Adiciona um novo estado à lista de estados abertos, garantindo exclusividade dos membros e utilização do elemento de menor custo
+        
+        open_index, visited_index = self.__get_insertion_indexes(new_state)
+        open_repeated, visited_repeated = self.__check_repetition(new_state, open_index, visited_index)
+        
+        if(not open_repeated and not visited_repeated):
+            return self.__open_states.insert(open_index, new_state)
+        
+        if(open_repeated and new_state < self.__open_states[open_index]):
+            self.__open_states[open_index] = new_state
+            return
+        
+        if(visited_repeated and new_state < self.__visited_states[visited_index]):
+            self.__visited_states.pop(visited_index)
+            return self.__open_states.insert(open_index, new_state)
+        
+   
+
+    def __get_insertion_indexes(self, new_state):
         open_index = bisect.bisect_left(self.__open_states, new_state)
         visited_index = bisect.bisect_left(self.__visited_states, new_state)
 
-      
-        open_repeated = self.__check_repetition(new_state, open_index, self.__open_states)
-        visited_repeated = self.__check_repetition(new_state, visited_index, self.__visited_states)
+        return (open_index, visited_index)
+
+
+    def __check_repetition(self, state, open_index, visited_index):
+
+
+        #? Extrair mais uma função para retirar repetição? Talvez deixar (evitar excesso de fragmentação do código)
+        open_repeated = open_index < len(self.__open_states) and state == self.__open_states[open_index]
+        visited_repeated = visited_index < len(self.__visited_states) and state == self.__visited_states[visited_index]
         
-        if(not open_repeated and not visited_repeated):
-            self.__open_states.insert(open_index, new_state)
-        elif(open_repeated and new_state < self.__open_states[open_index]):
-            self.__open_states[open_index] = new_state
-        elif(visited_repeated and new_state < self.__visited_states[visited_index]):
-            self.__visited_states.pop(visited_index)
-            self.__open_states.insert(open_index, new_state)
-        
-   
-    def __check_repetition(self, state, index, state_list):
-        return index < len(state_list) and state == state_list[index]
+        return (open_repeated, visited_repeated)
        
 
     def add_visited_state(self, visited_state):

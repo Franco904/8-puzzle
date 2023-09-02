@@ -18,8 +18,7 @@ class Puzzle:
     def __init__(self):
         # self.__open_states = PuzzleState.random()
 
-        initial_state = PuzzleState([1, 2, 3, 4, 5, 9, 6, 7, 8])
-
+        initial_state = PuzzleState([1, 2, 3, 4, 5, 6, 7, 8, 9])
         self.__state_set = StateSet(initial_state)
         self.__visits_counter = 0
 
@@ -35,6 +34,7 @@ class Puzzle:
 
     def __search(self):
 
+        #todo start timer
         while(self.__state_set.open_size != 0):
             
             current_state = self.__state_set.get_next_state()
@@ -48,12 +48,13 @@ class Puzzle:
             self.__increment_counter()
 
             if(current_state == goal_state):
+                #todo end timer
                 return self.__end_search(True, current_state)
             else:
-                next_states = current_state.generateNextStates()
+                child_states = current_state.generate_child_states()
 
-                for new_state in next_states:
-                    self.__state_set.add_open_state(new_state)
+                for child_state in child_states:
+                    self.__state_set.add_open_state(child_state)
                     
             self.__state_set.add_visited_state(current_state)
            
