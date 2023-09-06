@@ -5,7 +5,7 @@ if __name__ == '__main__':
 
 '''
     - Transformar estado em tuple ok
-    - Visited_Staes virar dicionário no formato tupla : objeto
+    - Visited_Staes virar dicionário no formato tupla : objeto  ok
     - reimplementar open_States com duplicação dos dados em um set - jeito mais fácil
         - Verificar forma de melhorar depois. Reverse lookup funciona?
 
