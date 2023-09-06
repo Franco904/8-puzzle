@@ -70,8 +70,9 @@ class PuzzleState():
 
         for movement in movements:
             try:
-                child_states.append(self.__create_child(
-                    empty_index, movement["index"], movement["direction"]))
+                child = self.__create_child(empty_index, movement["index"], movement["direction"])
+                child.calculateAdvancedHeuristic()
+                child_states.append(child)
             except IndexError:
                 pass
 
@@ -79,13 +80,13 @@ class PuzzleState():
 
     def __move_pieces(self, empty_index, new_index):
         # Troca a posição do elemento vazio e de outro elemento.
-        new_state = self.state[:]
+        new_state = list(self.state)
 
         temp = new_state[new_index]
         new_state[new_index] = EMPTY_CELL
         new_state[empty_index] = temp
 
-        return new_state
+        return tuple(new_state)
 
     def __create_child(self, empty_index, new_index, horizontal_move=False):
         # Move uma peça para a posição vazia e gera um novo estado.
