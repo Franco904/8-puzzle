@@ -1,7 +1,8 @@
 import time
 from src.models.puzzle_state import PuzzleState
 from src.models.state_set import StateSet
-
+start_time = 0
+end_time = 0
 goal_state = PuzzleState((1, 2, 3, 4, 5, 6, 7, 8, 9))
 
 '''
@@ -27,9 +28,10 @@ class Puzzle:
     def __init__(self):
         # self.__open_states = PuzzleState.random()
 
-        initial_state = PuzzleState((9, 1, 2, 3, 4, 5, 6, 7, 8))
+        initial_state = PuzzleState((4,7,5,9,2,1,3,6,8))
         self.__state_set = StateSet(initial_state)
         self.__visits_counter = 0
+        self.__found = False
 
         
     """
@@ -45,7 +47,7 @@ class Puzzle:
 
         start_time = time.time()
         # Enquanto houver estado aberto
-        while(self.__state_set.open_size != 0):
+        while(self.__state_set.open_size() != 0):
             
             # Obtém o próximo estado
             current_state = self.__state_set.get_next_state()
@@ -59,9 +61,8 @@ class Puzzle:
             self.__increment_counter()
             # Verifica se o novo estado é o objetivo. Caso positivo, encerra a busca. Caso negativo, gera estados filhos.
             if(current_state == goal_state):
-                
-                end_time = time.time()
-                return self.__end_search(True, current_state, end_time - start_time)
+                self.__found = True
+                break
             else:
                 child_states = current_state.generate_child_states()
 
@@ -70,16 +71,20 @@ class Puzzle:
 
             # Adiciona estado analisado à lista de visitados.        
             self.__state_set.add_visited_state(current_state)
-           
+        
+        end_time = time.time()
+        self.__end_search(current_state, end_time - start_time)
 
-    def __end_search(self, hasFound: bool, final_state, total_time):
-        if hasFound:
+    def __end_search(self, final_state, total_time):
+        
+        print(f'Tempo de busca: {total_time} seconds')
+        print(f'nodos visitados: {self.__visits_counter}')
+
+        if self.__found:
             print(f'Estado final:')
             final_state.print_formatted()
-            print('')
-            print(f'Tempo de busca: {total_time} seconds')
+            print('')    
             print(f'Contagem de movimentos: {final_state.acc_cost}')
-            print(f'nodos visitados: {self.__visits_counter}')
             print('Caminho para o resultado: ')
             final_state.display_path()
         else:

@@ -71,7 +71,8 @@ class PuzzleState():
         for movement in movements:
             try:
                 child = self.__create_child(empty_index, movement["index"], movement["direction"])
-                #child.calculateAdvancedHeuristic()
+                child.calculate_advanced_heuristic()
+                #child.calculateBasicHeuristic()
                 child_states.append(child)
             except IndexError:
                 pass
@@ -102,14 +103,12 @@ class PuzzleState():
         return PuzzleState(new_state, new_cost, self)
 
     
-    def calculateBasicHeuristic(self):
+    def calculate_basic_heuristic(self):
         #* p.137 do livro
         '''
             O state objetivo é [1,2,3,4,5,6,7,8,9]. Como listas iniciam indexação em 0, tem-se que um elemento estará em sua posição desejada se seu valor - seu index for igual a 1
         
             Calcula-se a heurística básica contando quantos elementos estão fora de posição.
-
-            #? heurística ficará superestimada, considerando o custo unitário dos movimentos? Ler livro e, se necessário, alterar para uma escala mais adequada (talvez dividir por 10?)
         '''
         heuristic = 0
 
@@ -120,7 +119,7 @@ class PuzzleState():
         self.__heuristic = heuristic
 
 
-    def calculateAdvancedHeuristic(self):
+    def calculate_advanced_heuristic(self):
         #* p.137 do livro
         
         '''
@@ -159,11 +158,12 @@ class PuzzleState():
         parent = self.__parent_state
 
         while(parent is not None):
+
             path.append(parent)
             parent = parent.parent_state
         
         path.reverse()
         for i, state in enumerate(path):
-            print(f'Step {i+1}:')
+            print(f'Step {i}:')
             state.print_formatted()
             print("")
