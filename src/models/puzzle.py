@@ -1,19 +1,10 @@
 import time
+from settings import SETTINGS
 from src.models.puzzle_state import PuzzleState
 from src.models.state_set import StateSet
 start_time = 0
 end_time = 0
 goal_state = PuzzleState((1, 2, 3, 4, 5, 6, 7, 8, 9))
-
-'''
-#* Casos de teste
-#* Difícil: [9,6,5,2,4,7,8,1,3] - 16
-#* Difícil: [6,4,5, 2, 8, 9, 7, 3, 1] - 17
-#* Médio: [2,3,9, 1, 5, 8, 7, 6, 4] - 10
-#* Médio: [2, 6, 1, 9, 3, 5, 7, 4, 8] - 11
-#* Fácil: [1, 2, 3, 7, 5, 6, 4, 8, 9] - 2
-
-'''
 
 class Puzzle:
     """
@@ -26,9 +17,8 @@ class Puzzle:
     """
 
     def __init__(self):
-        # self.__open_states = PuzzleState.random()
-
-        initial_state = PuzzleState((4,7,5,9,2,1,3,6,8))
+        
+        initial_state = PuzzleState(SETTINGS["INITIAL_STATE"])
         self.__state_set = StateSet(initial_state)
         self.__visits_counter = 0
         self.__found = False
@@ -67,6 +57,8 @@ class Puzzle:
                 child_states = current_state.generate_child_states()
 
                 for child_state in child_states:
+
+                    self.__apply_heuristic(child_state)
                     self.__state_set.add_open_state(child_state)
 
             # Adiciona estado analisado à lista de visitados.        
@@ -89,6 +81,22 @@ class Puzzle:
             final_state.display_path()
         else:
             print('O estado final não foi encontrado!')
+
+    def __apply_heuristic(self, child):
+
+        '''
+            Aplica heurística básica se HEURISTIC for definida como 1 nas configurações.
+            Aplica a heurística avançada caso a configuração seja definida como 2.
+            Não executada nada caso o valor da configuração seja diferente (modo sem heurística)
+        '''
+
+        heuristic = SETTINGS["HEURISTIC"]
+
+        if heuristic == 1:
+            child.calculate_basic_heuristic()
+        
+        if heuristic == 2:
+            child.calculate_advanced_heuristic()
 
     def __print_start(self):
         print(f'======== 8 PUZZLE ========\n')

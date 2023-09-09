@@ -71,8 +71,6 @@ class PuzzleState():
         for movement in movements:
             try:
                 child = self.__create_child(empty_index, movement["index"], movement["direction"])
-                child.calculate_advanced_heuristic()
-                #child.calculateBasicHeuristic()
                 child_states.append(child)
             except IndexError:
                 pass
