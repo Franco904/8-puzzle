@@ -1,25 +1,22 @@
 import random
-import time
-import math
 
 EMPTY_CELL = 9
 BOARD_SIZE = 9
 ROW_SIZE = 3
 
-#Cria e popula um dicionário que associa o index de um elemento em lista com sua coordenada em representação de matriz
+# Cria e popula um dicionário que associa o index de um elemento em lista com sua coordenada em representação de matriz
 COORDS = {}
-for i in range(BOARD_SIZE):
-    COORDS[i] = (i%ROW_SIZE, i//ROW_SIZE)
+for c in range(BOARD_SIZE):
+    COORDS[c] = (c % ROW_SIZE, c // ROW_SIZE)
 
-class PuzzleState():
+
+class PuzzleState:
     def __init__(self, state, cost=0, parent_state=None):
-        
         self.__state = state
         self.__parent_state = parent_state
         self.__acc_cost = cost
         self.__heuristic = 0
 
-    
     def __eq__(self, other):
         # Verifica se dois estados são iguais com base em suas configurações de peças.
         return self.__state == other.state
@@ -55,17 +52,17 @@ class PuzzleState():
     @property
     def parent_state(self):
         return self.__parent_state
-    
+
     def generate_child_states(self):
         # Gera e retorna uma lista de estados possíveis resultantes de movimentos válidos do estado atual.
 
         empty_index = self.__state.index(EMPTY_CELL)
         child_states = []
 
-        movements = [{"index": empty_index-3, "direction": False}, #up
-                     {"index": empty_index+3, "direction": False}, #down
-                     {"index": empty_index-1, "direction": True}, #left
-                     {"index": empty_index+1, "direction": True}, #right
+        movements = [{"index": empty_index - 3, "direction": False},  # up
+                     {"index": empty_index + 3, "direction": False},  # down
+                     {"index": empty_index - 1, "direction": True},  # left
+                     {"index": empty_index + 1, "direction": True},  # right
                      ]
 
         for movement in movements:
@@ -89,61 +86,56 @@ class PuzzleState():
 
     def __create_child(self, empty_index, new_index, horizontal_move=False):
         # Move uma peça para a posição vazia e gera um novo estado.
-        if (new_index < 0 or new_index > BOARD_SIZE):
+        if new_index < 0 or new_index > BOARD_SIZE:
             raise IndexError("Invalid Movement")
 
-        if (horizontal_move is True and (new_index // ROW_SIZE != empty_index // ROW_SIZE)):
+        if horizontal_move is True and new_index // ROW_SIZE != empty_index // ROW_SIZE:
             raise IndexError("Invalid Movement")
 
         new_state = self.__move_pieces(empty_index, new_index)
-        new_cost = self.__acc_cost+1
+        new_cost = self.__acc_cost + 1
 
         return PuzzleState(new_state, new_cost, self)
 
-    
     def calculate_basic_heuristic(self):
-        #* p.137 do livro
-        '''
+        # * p.137 do livro
+        """
             O state objetivo é [1,2,3,4,5,6,7,8,9]. Como listas iniciam indexação em 0, tem-se que um elemento estará em sua posição desejada se seu valor - seu index for igual a 1
-        
+
             Calcula-se a heurística básica contando quantos elementos estão fora de posição.
-        '''
+        """
         heuristic = 0
 
         for i, piece_value in enumerate(self.__state):
             if (piece_value - i) != 1:
                 heuristic += 1
-        
+
         self.__heuristic = heuristic
 
-
     def calculate_advanced_heuristic(self):
-        #* p.137 do livro
-        
-        '''
+        # * p.137 do livro
+
+        """
             Utiliza a mesma lógica da heurística anterior para identificar o estado desejado.
 
             A heurística é calculada como a soma do número de movimentos necessários para mover cada peça para a sua posição correta (desconsiderando a existência de obstáculos).
-        
+
             #? Heurística superestimada? Ler livro e, se necessário, buscar forma de colocar em escala adequada
-        '''
+        """
 
         heuristic = 0
         for i, piece_value in enumerate(self.__state):
-            
-            if(piece_value != EMPTY_CELL):
-                current_coord = COORDS[i]
-                desired_coord = COORDS[piece_value-1]
 
-                distance = abs(current_coord[0]-desired_coord[0]) + abs(current_coord[1] - desired_coord[1])
+            if piece_value != EMPTY_CELL:
+                current_coord = COORDS[i]
+                desired_coord = COORDS[piece_value - 1]
+
+                distance = abs(current_coord[0] - desired_coord[0]) + abs(current_coord[1] - desired_coord[1])
                 heuristic += distance
 
         self.__heuristic = heuristic
 
-
-
     def print_formatted(self):
-
         state = self.__state
 
         print(f'[{state[0]}] [{state[1]}] [{state[2]}]')
@@ -155,11 +147,10 @@ class PuzzleState():
         path = [self]
         parent = self.__parent_state
 
-        while(parent is not None):
-
+        while parent is not None:
             path.append(parent)
             parent = parent.parent_state
-        
+
         path.reverse()
         for i, state in enumerate(path):
             print(f'Step {i}:')

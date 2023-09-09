@@ -1,10 +1,13 @@
 import time
+
 from settings import SETTINGS
 from src.models.puzzle_state import PuzzleState
 from src.models.state_set import StateSet
+
 start_time = 0
 end_time = 0
 goal_state = PuzzleState((1, 2, 3, 4, 5, 6, 7, 8, 9))
+
 
 class Puzzle:
     """
@@ -32,12 +35,11 @@ class Puzzle:
         self.__print_start()
         self.__search()
 
-
     def __search(self):
-
         start_time = time.time()
+
         # Enquanto houver estado aberto
-        while(self.__state_set.open_size() != 0):
+        while self.__state_set.open_size() != 0:
             
             # Obtém o próximo estado
             current_state = self.__state_set.get_next_state()
@@ -49,8 +51,10 @@ class Puzzle:
             '''
 
             self.__increment_counter()
-            # Verifica se o novo estado é o objetivo. Caso positivo, encerra a busca. Caso negativo, gera estados filhos.
-            if(current_state == goal_state):
+
+            # Verifica se o novo estado é o objetivo. Caso positivo, encerra a busca. Caso negativo, gera estados
+            # filhos.
+            if current_state == goal_state:
                 self.__found = True
                 break
             else:
@@ -105,6 +109,5 @@ class Puzzle:
         self.__state_set.print_next_state()
         print('')
 
-
     def __increment_counter(self):
-        self.__visits_counter +=1
+        self.__visits_counter += 1

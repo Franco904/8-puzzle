@@ -1,7 +1,7 @@
 import bisect
 
 
-class StateSet():
+class StateSet:
     def __init__(self, initial_state):
         # Cria duas listas: uma para estados abertos e outra para estados visitados.
          
@@ -13,44 +13,40 @@ class StateSet():
         # Retorna o número de estados na lista de estados abertos.
         return len(self.__open_states_list)
 
-
     def add_open_state(self, new_state):
-        # Adiciona um novo estado à lista de estados abertos, garantindo exclusividade dos membros e utilização do elemento de menor custo
+        # Adiciona um novo estado à lista de estados abertos, garantindo exclusividade dos membros e utilização do
+        # elemento de menor custo
         
         # Verifica se o novo estado já foi incluído em alguma das listas
         open_repeated = new_state.state in self.__open_states_set
         visited_repeated = True and self.__visited_states.get(new_state.state, False)
 
         # Se o novo estado não está em nenhuma das listas, faz sua inclusão na lista de abertos
-        if(not open_repeated and not visited_repeated):
+        if not open_repeated and not visited_repeated:
             return self.__add_new_state(new_state)
 
-        
         # Se o novo estado já está na lista de abertos, mantém o estado com menor custo
-        if(open_repeated):
+        if open_repeated:
             return self.__add_open_repeated(new_state)
 
-        
-        # Se o novo estado já está na lista de visitados, mas possui um custo menor, retira o antigo da lista de visitados e inclui o novo na lista de abertos
-        if(visited_repeated):
+        # Se o novo estado já está na lista de visitados, mas possui um custo menor, retira o antigo da lista de
+        # visitados e inclui o novo na lista de abertos
+        if visited_repeated:
             return self.__add_visited_repeated(new_state)
     
     def __add_new_state(self, state):
-
         # Obtém índices para inserção do novo estado
         index = self.__get_insertion_index(state)
         self.__open_states_set.add(state.state)
         self.__open_states_list.insert(index, state)
 
     def __add_open_repeated(self, state):
-
         index = self.__open_states_list.index(state)
 
         if state < self.__open_states_list[index]:
             self.__open_states_list[index] = state
 
     def __add_visited_repeated(self, state):
-
         visited_state = self.__visited_states[state.state]
 
         if state < visited_state:
@@ -58,7 +54,6 @@ class StateSet():
             self.__visited_states.pop(state.state)
             self.__open_states_set.add(state.state)
             self.__open_states_list.insert(index, state)        
-                            
 
     def __get_insertion_index(self, new_state):
         # Obtém a posição de inserção do novo estado nas listas de estados abertos e visitados
@@ -78,8 +73,6 @@ class StateSet():
 
         next_state = self.__open_states_list.pop(0)
 
-
-        
         self.__open_states_set.remove(next_state.state)
         return next_state
 
