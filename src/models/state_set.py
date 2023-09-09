@@ -13,40 +13,40 @@ class StateSet:
         # Retorna o número de estados na lista de estados abertos.
         return len(self.__open_states_list)
 
-    def add_open_state(self, new_state):
+    def check_child_open_state(self, new_state):
         # Adiciona um novo estado à lista de estados abertos, garantindo exclusividade dos membros e utilização do
         # elemento de menor custo
-        
+
         # Verifica se o novo estado já foi incluído em alguma das listas
         open_repeated = new_state.state in self.__open_states_set
-        visited_repeated = True and self.__visited_states.get(new_state.state, False)
+        visited_repeated = self.__visited_states.get(new_state.state, False)
 
         # Se o novo estado não está em nenhuma das listas, faz sua inclusão na lista de abertos
         if not open_repeated and not visited_repeated:
-            return self.__add_new_state(new_state)
+            return self.__add_new_state_on_neither_open_nor_visited_repeated(new_state)
 
         # Se o novo estado já está na lista de abertos, mantém o estado com menor custo
         if open_repeated:
-            return self.__add_open_repeated(new_state)
+            return self.__add_new_state_on_open_and_repeated(new_state)
 
         # Se o novo estado já está na lista de visitados, mas possui um custo menor, retira o antigo da lista de
         # visitados e inclui o novo na lista de abertos
         if visited_repeated:
-            return self.__add_visited_repeated(new_state)
+            return self.__add_new_state_on_visited_and_repeated(new_state)
     
-    def __add_new_state(self, state):
+    def __add_new_state_on_neither_open_nor_visited_repeated(self, state):
         # Obtém índices para inserção do novo estado
         index = self.__get_insertion_index(state)
         self.__open_states_set.add(state.state)
         self.__open_states_list.insert(index, state)
 
-    def __add_open_repeated(self, state):
+    def __add_new_state_on_open_and_repeated(self, state):
         index = self.__open_states_list.index(state)
 
         if state < self.__open_states_list[index]:
             self.__open_states_list[index] = state
 
-    def __add_visited_repeated(self, state):
+    def __add_new_state_on_visited_and_repeated(self, state):
         visited_state = self.__visited_states[state.state]
 
         if state < visited_state:

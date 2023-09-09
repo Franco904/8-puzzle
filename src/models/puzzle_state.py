@@ -24,7 +24,7 @@ class PuzzleState:
     def __lt__(self, other):
         # Define a ordem de prioridade para a fila de prioridade usada em algoritmos de busca.
         # É baseado na soma do custo acumulado e da heurística do estado.
-        return self.__acc_cost + self.__heuristic < other.acc_cost + other.heuristic
+        return (self.__acc_cost + self.__heuristic) < (other.acc_cost + other.heuristic)
 
     @staticmethod
     def random():
@@ -59,15 +59,16 @@ class PuzzleState:
         empty_index = self.__state.index(EMPTY_CELL)
         child_states = []
 
-        movements = [{"index": empty_index - 3, "direction": False},  # up
-                     {"index": empty_index + 3, "direction": False},  # down
-                     {"index": empty_index - 1, "direction": True},  # left
-                     {"index": empty_index + 1, "direction": True},  # right
-                     ]
+        movements = [
+            {"index": empty_index - 3, "is_horizontal_move": False},  # up
+            {"index": empty_index + 3, "is_horizontal_move": False},  # down
+            {"index": empty_index - 1, "is_horizontal_move": True},  # left
+            {"index": empty_index + 1, "is_horizontal_move": True},  # right
+        ]
 
         for movement in movements:
             try:
-                child = self.__create_child(empty_index, movement["index"], movement["direction"])
+                child = self.__create_child(empty_index, movement["index"], movement["is_horizontal_move"])
                 child_states.append(child)
             except IndexError:
                 pass
@@ -84,12 +85,15 @@ class PuzzleState:
 
         return tuple(new_state)
 
-    def __create_child(self, empty_index, new_index, horizontal_move=False):
+    def __create_child(self, empty_index, new_index, is_horizontal_move=False):
         # Move uma peça para a posição vazia e gera um novo estado.
-        if new_index < 0 or new_index > BOARD_SIZE:
+
+        has_moved_out_of_board = new_index < 0 or new_index > BOARD_SIZE
+        if has_moved_out_of_board:
             raise IndexError("Invalid Movement")
 
-        if horizontal_move is True and new_index // ROW_SIZE != empty_index // ROW_SIZE:
+        has_changed_board_row = is_horizontal_move is True and new_index // ROW_SIZE != empty_index // ROW_SIZE
+        if has_changed_board_row:
             raise IndexError("Invalid Movement")
 
         new_state = self.__move_pieces(empty_index, new_index)
