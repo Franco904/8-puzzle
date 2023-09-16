@@ -64,7 +64,7 @@ class PuzzleState:
 
         return child_states
 
-    def __create_child(self, empty_index, new_index, horizontal_move=False):
+    def __create_child(self, empty_index, new_index, is_horizontal_move=False):
         # Move uma peça para a posição vazia e gera um novo estado.
 
         has_moved_out_of_board = new_index < 0 or new_index > BOARD_SIZE
@@ -108,7 +108,7 @@ class PuzzleState:
     def calculate_advanced_heuristic(self):
         # * p.137 do livro
 
-        """
+        '''
             Utiliza a mesma lógica da heurística anterior para identificar o estado desejado.
 
             A heurística é calculada como a soma do número de movimentos necessários para mover cada peça para a sua posição correta (desconsiderando a existência de obstáculos).
