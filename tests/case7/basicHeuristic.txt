@@ -6,8 +6,8 @@ Estado inicial:
 [1] [2] [3]
 [9] [4] [8]
 
-Tempo de busca: 0.016247034072875977 seconds
-nodos visitados: 1012
+Tempo de busca: 0.010781526565551758 seconds
+nodos visitados: 947
 Estado final:
 [1] [2] [3]
 [4] [5] [6]

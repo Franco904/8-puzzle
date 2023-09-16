@@ -100,7 +100,7 @@ class PuzzleState:
         heuristic = 0
 
         for i, piece_value in enumerate(self.__state):
-            if (piece_value - i) != 1:
+            if piece_value != EMPTY_CELL and (piece_value - i) != 1:
                 heuristic += 1
 
         self.__heuristic = heuristic

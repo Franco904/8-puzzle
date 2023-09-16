@@ -46,6 +46,6 @@ case8: (3, 1, 8, 5, 6, 2, 7, 4, 9) - 24 passos - slide
 """
   
 SETTINGS = {
-  "HEURISTIC": 2,
-  "INITIAL_STATE": (7,6,5,8,9,4,3,1,2)
+  "HEURISTIC": 1,
+  "INITIAL_STATE": (3, 1, 8, 5, 6, 2, 7, 4, 9)
 }
