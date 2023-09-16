@@ -21,7 +21,7 @@ class StateSet:
         self.__open_states_set.remove(next_state.state)
         return next_state
     
-    def check_child_open_state(self, new_state):
+    def add_open_state(self, new_state):
         # Adiciona um novo estado à lista de estados abertos, garantindo exclusividade dos membros e utilização do
         # elemento de menor custo
 

@@ -54,7 +54,7 @@ class Puzzle:
 
                 for child_state in child_states:
                     self.__apply_heuristic(child_state)
-                    self.__state_set.check_child_open_state(child_state)
+                    self.__state_set.add_open_state(child_state)
 
             # Adiciona estado analisado à lista de visitados.        
             self.__state_set.add_visited_state(current_state)
