@@ -29,17 +29,6 @@ class PuzzleState():
         # É baseado na soma do custo acumulado e da heurística do estado.
         return self.__acc_cost + self.__heuristic < other.acc_cost + other.heuristic
 
-    @staticmethod
-    def random():
-        pieces = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        random.shuffle(pieces)
-
-        return PuzzleState(pieces)
-
-    @staticmethod
-    def empty():
-        return PuzzleState([])
-
     @property
     def state(self):
         return self.__state
@@ -77,16 +66,6 @@ class PuzzleState():
 
         return child_states
 
-    def __move_pieces(self, empty_index, new_index):
-        # Troca a posição do elemento vazio e de outro elemento.
-        new_state = list(self.state)
-
-        temp = new_state[new_index]
-        new_state[new_index] = EMPTY_CELL
-        new_state[empty_index] = temp
-
-        return tuple(new_state)
-
     def __create_child(self, empty_index, new_index, horizontal_move=False):
         # Move uma peça para a posição vazia e gera um novo estado.
         if (new_index < 0 or new_index > BOARD_SIZE):
@@ -100,6 +79,15 @@ class PuzzleState():
 
         return PuzzleState(new_state, new_cost, self)
 
+    def __move_pieces(self, empty_index, new_index):
+        # Troca a posição do elemento vazio e de outro elemento.
+        new_state = list(self.state)
+
+        temp = new_state[new_index]
+        new_state[new_index] = EMPTY_CELL
+        new_state[empty_index] = temp
+
+        return tuple(new_state)
     
     def calculate_basic_heuristic(self):
         #* p.137 do livro
@@ -124,8 +112,6 @@ class PuzzleState():
             Utiliza a mesma lógica da heurística anterior para identificar o estado desejado.
 
             A heurística é calculada como a soma do número de movimentos necessários para mover cada peça para a sua posição correta (desconsiderando a existência de obstáculos).
-        
-            #? Heurística superestimada? Ler livro e, se necessário, buscar forma de colocar em escala adequada
         '''
 
         heuristic = 0

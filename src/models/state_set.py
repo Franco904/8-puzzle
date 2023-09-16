@@ -13,6 +13,13 @@ class StateSet():
         # Retorna o número de estados na lista de estados abertos.
         return len(self.__open_states_list)
 
+    def get_next_state(self):
+        # Retorna o primeiro estado da lista de estados abertos e o remove da lista.
+
+        next_state = self.__open_states_list.pop(0)
+
+        self.__open_states_set.remove(next_state.state)
+        return next_state
 
     def add_open_state(self, new_state):
         # Adiciona um novo estado à lista de estados abertos, garantindo exclusividade dos membros e utilização do elemento de menor custo
@@ -73,15 +80,7 @@ class StateSet():
         state = visited_state.state
         self.__visited_states[state] = visited_state
 
-    def get_next_state(self):
-        # Retorna o primeiro estado da lista de estados abertos e o remove da lista.
 
-        next_state = self.__open_states_list.pop(0)
-
-
-        
-        self.__open_states_set.remove(next_state.state)
-        return next_state
 
     def print_next_state(self):
         self.__open_states_list[0].print_formatted()

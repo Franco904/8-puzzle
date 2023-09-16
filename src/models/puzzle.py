@@ -2,8 +2,7 @@ import time
 from settings import SETTINGS
 from src.models.puzzle_state import PuzzleState
 from src.models.state_set import StateSet
-start_time = 0
-end_time = 0
+
 goal_state = PuzzleState((1, 2, 3, 4, 5, 6, 7, 8, 9))
 
 class Puzzle:
